@@ -1,0 +1,32 @@
+<fieldset id="rule_fields">
+  <legend><%= t(:rules) %></legend>
+
+  <%= form_for @promotion, :url => object_url, :method => :put do |f| %>
+    <p>
+      <% Spree::Promotion::MATCH_POLICIES.each do |policy| %>
+        <label><%= f.radio_button :match_policy, policy %> <%= t "promotion_form.match_policies.#{policy}" %></label> &nbsp;
+      <% end %>
+    </p>
+    <div id="rules" class="filter_list">
+      <% if @promotion.rules.any? %>
+        <%= render :partial => 'promotion_rule', :collection => @promotion.rules, :locals => {} %>
+      <% else %>
+        <!-- <p><%= t(:no_rules_added) %></p> -->
+      <% end %>
+    </div>
+    <p class="form-buttons">
+      <%= button t(:update) %>
+    </p>
+  <% end %>
+
+  <%= form_tag spree.admin_promotion_promotion_rules_path(@promotion), :remote => true,
+                                                                 :id => 'new_product_rule_form' do %>
+
+    <p>
+      <%= label_tag :promotion_rule_type, t(:add_rule_of_type) %>
+      <%= select_tag('promotion_rule[type]', options_for_promotion_rule_types(@promotion)) %>
+      <%= submit_tag t(:add) %>
+    </p>
+  <% end %>
+
+</fieldset>
